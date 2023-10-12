@@ -1,17 +1,33 @@
+/*
+To-Do:
+  -Save scores to local storage
+  -Create a notice for if answer was right or wrong
+  -Hide timer while not in quiz
+  -Create highscores div that pops up when clicking "View High Scores"
+  -Hide highscores while in quiz
+*/
+
+
+
 var quizBox = document.querySelector(".quiz-box");
 var startMenu = document.querySelector(".start-menu");
 var startBtn = document.querySelector(".start-btn");
 var gameOverMenu = document.querySelector(".game-over");
 var startOverBtn = document.querySelector(".start-over-btn");
+var timerDisplay = document.querySelector(".timer-display");
 
 var isStartVisible = true;
 var isQuizVisible = false;
-var isGameOverVisible = false;
+// var isGameOverVisible = false;
 var currentQuestionIndex = 0;
+
+var timerSec = 120;
+
+var score;
 
 var question1 = {
   title: "What is used to store data in JavaScript with the keyword 'var'?",
-  answers: ["A variable", "A declaration", "A function"],
+  answers: ["A variable", "A declaration", "A function", "A tag"],
   correctAnswerIndex: "0"
 };
 var question2 = {
@@ -23,17 +39,40 @@ var questions = [question1, question2];
 
 console.log(questions);
 
+function startCountdown() {
+
+  var timeInterval = setInterval(function () {
+    timerSec--;
+
+    timerDisplay.textContent = timerSec;
+
+    if (timerSec === 0 || checkGameOver() || isStartVisible) {
+      clearInterval(timeInterval);
+    }
+
+
+  }, 1000)
+}
+
 function changeStartMenuDisplay() {
   if (isStartVisible) {
     startMenu.setAttribute("style", "display: none");
-    displayQuestion(question1);
+    displayQuestion(questions[currentQuestionIndex]);
     // gameOverMenu.setAttribute("style", "display: block");
     isStartVisible = false;
   } else if (!isStartVisible) {
     startMenu.setAttribute("style", "display: block");
     gameOverMenu.setAttribute("style", "display: none");
     isStartVisible = true;
+    // isGameOverVisible = false;
+    currentQuestionIndex = 0;
   }
+  timerSec = 120;
+  timerDisplay.textContent = timerSec;
+}
+
+function changeGameOverDisplay() {
+  gameOverMenu.setAttribute("style", "display: block");
 }
 
 /*
@@ -71,7 +110,8 @@ function displayQuestion(question) {
 }
 
 function checkGameOver() {
-  if (currentQuestionIndex === questions.length - 1) {
+  if (currentQuestionIndex === questions.length) {
+    // isGameOverVisible = true;
     return true;
   }
 }
@@ -83,28 +123,27 @@ function checkSelection(event) {
     if (clickedAnswerID !== questions[currentQuestionIndex].correctAnswerIndex) {
       console.log("Wrong Answer.");
     }
-    // console.log(clickedAnswerID);
-    // console.log(questions[currentQuestionIndex].correctAnswerIndex);
 
-    // console.log(event.target.id);
     var previousQuestionDiv = document.querySelector(".question-div");
     previousQuestionDiv.remove();
 
-
+    currentQuestionIndex++;
 
     if (checkGameOver()) {
       console.log("Game Over.");
+      gameOverMenu.setAttribute("style", "display: block");
 
     } else {
-      currentQuestionIndex++;
       displayQuestion(questions[currentQuestionIndex]);
     }
-
-    // currentQuestionIndex++;
-    // displayQuestion(questions[currentQuestionIndex]);
   }
 }
 
-startBtn.addEventListener("click", changeStartMenuDisplay);
+function startGame() {
+  changeStartMenuDisplay();
+  startCountdown();
+}
+
+startBtn.addEventListener("click", startGame);
 startOverBtn.addEventListener("click", changeStartMenuDisplay);
 quizBox.addEventListener("click", checkSelection);
