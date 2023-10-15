@@ -10,8 +10,8 @@
 
 <body>
   <header>
-    <div class="high-scores">
-      <p>View High Scores</p>
+    <div class="high-score-btn">
+      <p>Toggle High Scores</p>
     </div>
     <div class="timer">
       <p>Timer: <span class="timer-display">120</span> seconds</p>
@@ -27,13 +27,27 @@
         <button class="start-btn">Start the Quiz</button>
       </div>
       <div class="game-over">
-        <h2>Time's Up!</h2>
-        <p class="score-text">You ended with a score of: </p>
+        <h2>Game Over!</h2>
         <p>To play again press the button below.</p>
         <button class="start-over-btn">Play Again</button>
       </div>
     </div>
   </main>
+
+  <div class="high-score-box">
+    <div class="high-score-list">
+      <h3>High Scores</h3>
+      <!-- <table class="score-table">
+        <tr>
+          <th>Place</th>
+          <th>Score</th>
+          <th>Initials</th>
+        </tr>
+
+      </table> -->
+      <button class="clear-scores-btn">Clear High Scores</button>
+    </div>
+  </div>
 
   <script src="./assets/js/script.js"></script>
 </body>
