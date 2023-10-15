@@ -6,7 +6,7 @@ This projects is a coding quiz that tracks high scores in local storage so that 
 
 ## Installation
 
-The pertinent files for the project, including this README can all be found in the Github repository located at: https://mhalder4.github.io/coding-quiz-challenge/. The website can be found at the Github pages address that follows: https://github.com/mhalder4/coding-quiz-challenge.
+The pertinent files for the project, including this README can all be found in the Github repository located at: https://github.com/mhalder4/coding-quiz-challenge. The website can be found at the Github pages address that follows: https://mhalder4.github.io/coding-quiz-challenge/.
 
 ## Usage
 
