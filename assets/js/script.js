@@ -1,10 +1,3 @@
-/*
-To-Do:
-  -Save scores to local storage
-  -Create highscores div that pops up when clicking "View High Scores"
-*/
-
-
 
 var quizBox = document.querySelector(".quiz-box");
 var highScoreBtn = document.querySelector(".high-score-btn");
@@ -19,7 +12,6 @@ var timerDisplay = document.querySelector(".timer-display");
 var isStartVisible = true;
 var isQuizVisible = false;
 var showHighScores = false;
-// var isGameOverVisible = false;
 var currentQuestionIndex = 0;
 
 var highscores = [];
@@ -83,6 +75,7 @@ var questions = [question1, question2, question3, question4, question5, question
 
 console.log(questions);
 
+// Loads local storage
 function loadLocalStorage() {
   var tempScores = JSON.parse(localStorage.getItem("highscores"));
   if (tempScores !== null) {
@@ -92,10 +85,12 @@ function loadLocalStorage() {
   }
 }
 
+// Updates local storage
 function updateLocalStorage() {
   localStorage.setItem("highscores", JSON.stringify(highscores));
 }
 
+// Clears local storage
 function clearLocalStorage(event) {
   if (event.target.matches(".clear-scores-btn")) {
     localStorage.clear();
@@ -104,6 +99,7 @@ function clearLocalStorage(event) {
   }
 }
 
+// Creates the table and table headings for the high scores inside the high score area
 function createTable() {
   var scoreTable = document.createElement("table");
   scoreTable.setAttribute("class", "score-table");
@@ -127,15 +123,57 @@ function createTable() {
 
 }
 
+// Creates the form and other html for players to use to submit their score at the end of the quiz
+function createHighScoreForm(div) {
+  var form = document.createElement("form");
+  div.appendChild(form);
+
+  var label = document.createElement("label");
+  label.textContent = "Enter your intials:";
+  label.setAttribute("for", "initials");
+  form.appendChild(label);
+
+  var input = document.createElement("input");
+  input.setAttribute("type", "text");
+  input.setAttribute("name", "initials");
+  input.setAttribute("id", "initials");
+  form.appendChild(input);
+
+  var submit = document.createElement("button");
+  submit.setAttribute("class", "submit-btn");
+  submit.textContent = "Submit";
+  form.appendChild(submit);
+}
+
+// creates the div to display the score for the game and space to put the entry form
+function createHighScoreInputBox() {
+  var highScoreDiv = document.createElement("div");
+  highScoreDiv.setAttribute("class", "high-score-div");
+  quizBox.appendChild(highScoreDiv);
+
+  var highScoreHeading = document.createElement("h3");
+  highScoreHeading.textContent = "Your score is: " + (timerSec - 1);
+  highScoreDiv.appendChild(highScoreHeading);
+  createHighScoreForm(highScoreDiv);
+
+}
+
+// Sorts the high scores from largest to smallest and cuts the array to a length of only 10 scores if it's too big
+function manageHighScores(arr) {
+
+  arr.sort(function (a, b) { return b.score - a.score });
+
+  if (arr.length > 10) {
+    arr = arr.slice(0, 10);
+  }
+
+  return arr;
+}
+
+//Creates the html to fit high scores on the table and appends them to the table
 function updateHighScoreList() {
 
   var scoreTable = document.querySelector(".score-table");
-  console.log(scoreTable);
-  console.log(typeof (scoreTable));
-  // var scoreTable = document.querySelector(".table-row");
-  // scoreTableRows.remove();
-  // console.log(typeof (scoreTableRows));
-  // highscores.sort(function (a, b) { return a.score - b.score });
 
   if (scoreTable === null) {
     createTable();
@@ -147,9 +185,6 @@ function updateHighScoreList() {
   scoreTable = document.querySelector(".score-table");
 
   highscores = manageHighScores(highscores);
-
-  console.log(highscores);
-  // console.log(highscores[0].score);
 
   var arrIndex = 0;
 
@@ -171,35 +206,9 @@ function updateHighScoreList() {
   })
 
   arrIndex = 0;
-
-  // for (var i = 0; i < 10; i++) {
-  //   var scoreTableRow = document.createElement("tr");
-  //   var scoreTablePlace = document.createElement("td");
-  //   var scoreTableScore = document.createElement("td");
-  //   var scoreTableInitials = document.createElement("td");
-  //   scoreTablePlace.textContent = i + 1;
-  //   scoreTableScore.textContent = highscores[i].score;
-  //   // console.log(highscores[i].score);
-  //   // scoreTableInitials.textContent = highscores[i][0];
-  //   scoreTableRow.appendChild(scoreTablePlace);
-  //   scoreTableRow.appendChild(scoreTableScore);
-  //   scoreTableRow.appendChild(scoreTableInitials);
-  //   scoreTable.appendChild(scoreTableRow);
-  // }
 }
 
-function manageHighScores(arr) {
-
-  arr.sort(function (a, b) { return b.score - a.score });
-  // arr.sort(function (a, b) { return a - b });
-
-  if (arr.length > 10) {
-    arr = arr.slice(0, 10);
-  }
-
-  return arr;
-}
-
+// Starts the timer countdown and tracks if the game is over
 function startCountdown() {
 
   var timeInterval = setInterval(function () {
@@ -215,23 +224,23 @@ function startCountdown() {
   }, 1000)
 }
 
+// Hides or brings out the start menu and game over menu
 function changeStartMenuDisplay() {
   if (isStartVisible) {
     startMenu.setAttribute("style", "display: none");
     displayQuestion(questions[currentQuestionIndex]);
-    // gameOverMenu.setAttribute("style", "display: block");
     isStartVisible = false;
   } else if (!isStartVisible) {
     startMenu.setAttribute("style", "display: block");
     gameOverMenu.setAttribute("style", "display: none");
     isStartVisible = true;
-    // isGameOverVisible = false;
     currentQuestionIndex = 0;
   }
   timerSec = 120;
   timerDisplay.textContent = timerSec;
 }
 
+// Toggles whether the high scores are displayed on screen or not
 function toggleHighScores() {
   if (!showHighScores) {
     highScoreBox.setAttribute("style", "display: flex");
@@ -244,23 +253,13 @@ function toggleHighScores() {
 
 }
 
+// Displays the game over screen
 function changeGameOverDisplay() {
   gameOverMenu.setAttribute("style", "display: block");
 }
 
-/*
-1. Create a div for the question
-2. Add the question title as a header
-3. Add div for each answer with answer inside and a answer-btn class and answer-index id
-4. Listen for click on answer-btn
-5. If answer-index id == correctAnswerIndex move to next question else subtract time and move to next question
-  1. Move to next question by removing question div, incrementing currentQuestion and repeating above steps for new question
-
-*/
-
+// Displays the current quiz question by creating the necessary html and appending to the existing div
 function displayQuestion(question) {
-  // var previousQuestionDiv = document.querySelector(".question-div");
-  // previousQuestionDiv.remove();
 
   var questionDiv = document.createElement("div");
   questionDiv.setAttribute("class", "question-div");
@@ -277,48 +276,20 @@ function displayQuestion(question) {
     answer.setAttribute("class", "answer-btn");
     answer.setAttribute("id", `${i}`);
     answer.textContent = question.answers[i];
-    // answer.setAttribute();
     questionList.appendChild(answer);
   }
 }
 
+// Checks if all the answers have been gone through
 function checkGameOver() {
   if (currentQuestionIndex === questions.length) {
-    // isGameOverVisible = true;
     return true;
   }
 }
 
-function createHighScoreForm(div) {
-  var form = document.createElement("form");
-  div.appendChild(form);
-  var label = document.createElement("label");
-  label.textContent = "Enter your intials:";
-  label.setAttribute("for", "initials");
-  form.appendChild(label);
-  var input = document.createElement("input");
-  input.setAttribute("type", "text");
-  input.setAttribute("name", "initials");
-  input.setAttribute("id", "initials");
-  form.appendChild(input);
-  var submit = document.createElement("button");
-  submit.setAttribute("class", "submit-btn");
-  submit.textContent = "Submit";
-  form.appendChild(submit);
-}
-
-function createHighScoreInputBox() {
-  var highScoreDiv = document.createElement("div");
-  highScoreDiv.setAttribute("class", "high-score-div");
-  quizBox.appendChild(highScoreDiv);
-  var highScoreHeading = document.createElement("h3");
-  highScoreHeading.textContent = "Your score is: " + (timerSec - 1);
-  highScoreDiv.appendChild(highScoreHeading);
-  createHighScoreForm(highScoreDiv);
-
-}
 
 function checkSelection(event) {
+  // Checks what answer button has been clicked and whether or not that was the right answer. Also chaecks if it was the last question in the quiz
   if (event.target.matches(".answer-btn")) {
     var clickedAnswerID = event.target.id;
 
@@ -334,25 +305,21 @@ function checkSelection(event) {
 
     if (checkGameOver()) {
       console.log("Game Over.");
-      // gameOverMenu.setAttribute("style", "display: block");
       createHighScoreInputBox();
 
     } else {
       displayQuestion(questions[currentQuestionIndex]);
     }
+    // Checks if the submit score button has been clicked and properly adds the score to the high score list and local storage after submission
   } else if (event.target.matches(".submit-btn")) {
     event.preventDefault();
     var highscoreInput = document.getElementById("initials");
     var initials = highscoreInput.value;
-    // var highscoreProfile = [initials, timerSec];
-    // var player = new Profile(initials, timerSec);
     var player = {
       playerInitials: initials,
       score: timerSec
     }
     highscores.push(player);
-
-    // console.log(highscores);
 
     updateHighScoreList();
     updateLocalStorage();
@@ -362,11 +329,10 @@ function checkSelection(event) {
 
     gameOverMenu.setAttribute("style", "display: block");
 
-
   }
 }
 
-
+// Starts the quiz and timer
 function startGame() {
   changeStartMenuDisplay();
   startCountdown();
