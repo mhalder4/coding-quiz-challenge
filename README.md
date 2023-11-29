@@ -12,7 +12,7 @@ The pertinent files for the project, including this README can all be found in t
 
 The website has a start button that can be clicked on to start the quiz. Once this button is clicked, a timer starts and a multiple choice question appears. Once an answer is clicked on, the quiz advances to the next question and removes time from the timer if the answer is wrong. Once all the questions have been answered the player can save their high score with their initials and restart the quiz if they so choose. There is also a button in the upper left to toggle a lsit of high scores and give the option to clear all the high scores.
 
-![A screenshot of the completed webpage.](./assets/images/weather-dashboard-challenge-screenshot.png)
+![A screenshot of the completed webpage.](./assets/images/coding-quiz-challenge-screenshot.png)
 
 ## Credits
 
